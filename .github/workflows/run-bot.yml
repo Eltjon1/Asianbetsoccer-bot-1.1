@@ -32,5 +32,8 @@ jobs:
           path: |
             lastgame.png
             lastgame.html
-            lastgame.txt
+            page-text.txt
+            network-log.json
+            network-urls.txt
+            important-responses.json
             debug.txt
