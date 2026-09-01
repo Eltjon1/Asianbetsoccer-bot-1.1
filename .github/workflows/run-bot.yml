@@ -32,3 +32,4 @@ jobs:
           path: |
             lastgame.png
             lastgame.html
+            lastgame.txt
