@@ -30,10 +30,5 @@ jobs:
         with:
           name: asianbetsoccer-lastgame
           path: |
-            lastgame.png
-            lastgame.html
-            page-text.txt
-            network-log.json
-            network-urls.txt
-            important-responses.json
-            debug.txt
+            lastgame-data.js
+            getData2-blocks.txt
