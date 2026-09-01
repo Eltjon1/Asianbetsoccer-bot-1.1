@@ -20,34 +20,46 @@ const fs = require('fs');
 
   console.log('Pagina aperta');
 
-  // Aspetta il banner Cookiebot
-  try {
-    const cookieButton = page.locator(
-      '#CybotCookiebotDialogBodyButtonDecline'
-    );
+  // Attendi che Cookiebot venga visualizzato
+  await page.waitForTimeout(3000);
 
-    await cookieButton.waitFor({
-      state: 'visible',
-      timeout: 15000
+  try {
+    const soloNecessari = page.getByText('Solo necessari', {
+      exact: true
     });
 
-    console.log('Banner cookie trovato');
+    console.log(
+      'Pulsanti "Solo necessari" trovati:',
+      await soloNecessari.count()
+    );
 
-    await cookieButton.click();
+    if (await soloNecessari.count() > 0) {
+      await soloNecessari.first().click({
+        force: true
+      });
 
-    console.log('Cliccato: Solo necessari');
-
-    await page.waitForTimeout(3000);
+      console.log('COOKIE: Solo necessari cliccato');
+    }
   } catch (error) {
-    console.log('Banner cookie non presente o già gestito');
+    console.log('Errore gestione Cookiebot:', error.message);
   }
 
-  // Aspettiamo che la pagina completi il caricamento dinamico
-  console.log('Attendo caricamento Last Game...');
+  // Diamo tempo al banner di sparire
+  await page.waitForTimeout(3000);
+
+  console.log(
+    'Cookiebot ancora visibile:',
+    await page.getByText('Solo necessari', { exact: true })
+      .isVisible()
+      .catch(() => false)
+  );
+
+  // Aspetta il caricamento dinamico delle partite
+  console.log('Attendo caricamento partite...');
 
   await page.waitForTimeout(15000);
 
-  // Salva screenshot completo
+  // Screenshot
   await page.screenshot({
     path: 'lastgame.png',
     fullPage: true
@@ -55,7 +67,7 @@ const fs = require('fs');
 
   console.log('Screenshot salvato');
 
-  // Salva HTML dopo l'esecuzione JavaScript
+  // HTML DOM dopo caricamento JS
   const html = await page.content();
 
   fs.writeFileSync(
@@ -66,7 +78,18 @@ const fs = require('fs');
 
   console.log('HTML salvato');
 
-  console.log('Operazione completata correttamente');
+  // Salviamo anche il testo della pagina per diagnostica
+  const testo = await page.locator('body').innerText();
+
+  fs.writeFileSync(
+    'lastgame.txt',
+    testo,
+    'utf8'
+  );
+
+  console.log('Testo pagina salvato');
 
   await browser.close();
+
+  console.log('FINE');
 })();
