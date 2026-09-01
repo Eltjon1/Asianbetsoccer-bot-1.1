@@ -28,7 +28,7 @@ jobs:
       - name: Upload results
         uses: actions/upload-artifact@v4
         with:
-          name: asianbetsoccer-lastgame
-          path: |
-            lastgame-data.js
-            getData2-blocks.txt
+       name: asianbetsoccer-getData2
+      path: |
+      tablefunc.js
+      getData2-function.txt
